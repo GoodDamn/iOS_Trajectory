@@ -5,6 +5,6 @@
 //  Created by Cell on 18.02.2023.
 //
 
-struct ItemsArray: Decodable{
-    let items: [ItemSocial];
+struct ServicesArray: Decodable{
+    let items: [Services];
 }

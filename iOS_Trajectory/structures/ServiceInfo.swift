@@ -7,7 +7,7 @@
 
 import UIKit;
 
-struct ItemData {
+struct ServiceInfo {
     let image_icon: UIImage?;
     let name: String?;
     let description: String?;

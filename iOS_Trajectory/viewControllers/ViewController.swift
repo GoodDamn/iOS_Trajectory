@@ -16,28 +16,36 @@ class ViewController: UIViewController {
     private final let HTTP_URL_JSON = "https://mobile-olympiad-trajectory.hb.bizmrg.com/semi-final-data.json";
     private final let VIEW_CONTROLLER_FULL_INFO_ID = "full_Info";
     
-    private var items:[ItemSocial]!;
+    private var items:[Services]!;
+    
+    private func fetchData(data: Data) throws {
+        self.items = try JSONDecoder().decode(ServicesArray.self, from: data).items;
+        self.socials_tableView.delegate = self;
+        self.socials_tableView.dataSource = self;
+        self.socials_tableView.reloadData();
+    }
     
     override func viewDidLoad() {
         super.viewDidLoad();
         
-        NetworkUtilities.downloadFile(httpUrl: HTTP_URL_JSON, completion: { [self]
+        NetworkUtilities.downloadFile(HTTP_URL_JSON, completion: { [weak self]
             data in
             
+            guard let self = self else{
+                print(self?.TAG, "May be it was deallocated ?");
+                return;
+            }
+            
             do {
-                items = try JSONDecoder().decode(ItemsArray.self, from: data).items;
-                
-                socials_tableView.delegate = self;
-                socials_tableView.dataSource = self;
-                socials_tableView.reloadData();
+                try self.fetchData(data: data);
             } catch {
-                print(TAG, "Error: JSON-parsing failed! Message:",error);
+                
+                
+                print(self.TAG, "Error: JSON-parsing failed! Message:",error);
             }
             
         });
-        
     }
-
     
 }
 
@@ -51,13 +59,14 @@ extension ViewController: UITableViewDelegate{
         let viewController = UIStoryboard(name: "Main", bundle: nil)
             .instantiateViewController(withIdentifier: VIEW_CONTROLLER_FULL_INFO_ID) as! FullInfoViewController;
         
-        let data:ItemSocial = items[indexPath.row];
+        let data = items[indexPath.row];
         
-        viewController.setItemData(input: ItemData(
-                                   image_icon: cell.imageView_icon.image,
-                                    name: data.name,
-                                    description: data.description,
-                                    link: data.service_url));
+        viewController.setItemData(ServiceInfo(
+            image_icon: cell.imageView_icon.image,
+            name: data.name,
+            description: data.description,
+            link: data.service_url)
+        );
         
         
         navigationController?.pushViewController(viewController, animated: true);
@@ -72,13 +81,14 @@ extension ViewController: UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: SOCIALS_ELEMENT_CELL_ID) as! SocialUITableViewCell;
+        let cell = tableView.dequeueReusableCell(withIdentifier: SOCIALS_ELEMENT_CELL_ID)
+                    as! SocialUITableViewCell;
         
-        let socialInfo: ItemSocial = items[indexPath.row];
+        let socialInfo = items[indexPath.row];
         
         cell.label_name.text = socialInfo.name;
         
-        NetworkUtilities.downloadFile(httpUrl: socialInfo.icon_url, completion: {
+        NetworkUtilities.downloadFile(socialInfo.icon_url, completion: {
             data in
             cell.imageView_icon.image = UIImage(data: data);
         });
