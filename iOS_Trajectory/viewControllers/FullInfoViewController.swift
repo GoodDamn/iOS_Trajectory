@@ -24,28 +24,15 @@ class FullInfoViewController: UIViewController{
         super.viewDidLoad();
         
         guard let itemData = itemData else {
-            let dialog = UIAlertController(
-                title: "Ошибка",
+            
+            Utilities.showErrorAlertDialog(
+                self,
                 message: "При обработке данных, произошла ошибка.",
-                preferredStyle: .alert
-            );
-            
-            let okAction = UIAlertAction(
-                title: "OK",
-                style: .default,
-                handler: {
+                okAction: {
                     alertAction in
-                    
-                    dialog.dismiss(animated: true, completion: nil);
                     self.navigationController?.popViewController(animated: true);
-                }
-            );
-            
-            dialog.addAction(okAction);
-            
-            
-            self.present(dialog, animated: true, completion: nil);
-            
+                },
+                retryAction: nil);
             return;
         }
         

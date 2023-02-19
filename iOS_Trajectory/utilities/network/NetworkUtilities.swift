@@ -18,28 +18,29 @@ class NetworkUtilities{
         ) {
         
         guard let url = URL(string: httpUrl) else {
+            onFailed?(nil);
             print(TAG, "Invalid URL string!");
             return;
         }
         
         URLSession.shared.dataTask(with: url, completionHandler: {
             data,response, error in
-           
-            print(TAG, "Dowloading is comoleted. Response:", response);
-            
-            if error != nil {
-                print(TAG, "Some error was occured:", error);
-                onFailed?(error);
-                return;
-            }
-            
-            guard let data = data else {
-                print(TAG, "Error while dowloading a data! Message:", error);
-                onFailed?(error);
-                return;
-            }
-            
             DispatchQueue.main.async {
+                print(TAG, "Dowloading is completed. Response:", response);
+                
+                if error != nil {
+                    print(TAG, "Some error was occured:", error);
+                    onFailed?(error);
+                    return;
+                }
+                
+                guard let data = data else {
+                    print(TAG, "Error while dowloading a data! Message:", error);
+                    onFailed?(error);
+                    return;
+                }
+                
+                
                 completion(data);
             }
         }).resume();
@@ -53,5 +54,32 @@ class NetworkUtilities{
         downloadFile(httpUrl,
                      completion: completion,
                      onFailed: nil);
+    }
+    
+    public static func getJSONFile<T : Decodable>(
+        _ url: String,
+        completion: @escaping ((T)->Void),
+        onFailed: @escaping ((String)->Void)
+        ) {
+        
+        downloadFile(
+            url,
+            completion: {
+                data in
+                
+                do {
+                    let json = try JSONDecoder().decode(T.self, from: data);
+                    completion(json);
+                } catch {
+                    
+                    onFailed("При обработке данных, произошла ошибка");
+                    
+                    print(self.TAG, "Error: JSON-parsing failed! Message:",error);
+                }
+            }, onFailed: {
+                error in
+                onFailed("При получении данных из сети, произошла ошибка");
+            }
+        );
     }
 }

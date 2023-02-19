@@ -18,57 +18,41 @@ class ViewController: UIViewController {
     
     private var items:[Services]!;
     
-    private func fetchData(data: Data) throws {
-        self.items = try JSONDecoder().decode(ServicesArray.self, from: data).items;
+    private func fetchData(_ servicesArray: ServicesArray) {
+        self.items = servicesArray.items;
         self.socials_tableView.delegate = self;
         self.socials_tableView.dataSource = self;
         self.socials_tableView.reloadData();
     }
     
-    private func getJSONFile(_ url: String) {
-        NetworkUtilities.downloadFile(
+    private func jsonObserve(_ url:String){
+        NetworkUtilities.getJSONFile(
             url,
-            completion: { [weak self]
-                data in
-                
-                guard let self = self else{
-                    print(self?.TAG, "May be it was deallocated ?");
-                    return;
-                }
-                
-                do {
-                    try self.fetchData(data: data);
-                } catch {
-                    
-                    Utilities.showErrorAlertDialog(
-                        self,
-                        message: "При обработке данных, произошла ошибка",
-                        okAction: nil,
-                        retryAction: {
-                            alertAction in
-                            self.getJSONFile(self.HTTPS_URL_JSON);
-                        });
-                    
-                    print(self.TAG, "Error: JSON-parsing failed! Message:",error);
-                }
+            completion: {
+                (servicesArray: ServicesArray) in
+                self.fetchData(servicesArray);
             }, onFailed: {
-                error in
-                
-                Utilities.showErrorAlertDialog(
-                    self,
-                    message: "При получении данных из сети, произошла ошибка",
-                    okAction: nil,
-                    retryAction: {
-                        alertAction in
-                        self.getJSONFile(self.HTTPS_URL_JSON);
-                    });
+                message in
+                self.errorAlert(message);
             });
     }
+    
+    private func errorAlert(_ message: String?){
+        Utilities.showErrorAlertDialog(
+            self,
+            message: message,
+            okAction: nil,
+            retryAction: {
+                alertAction in
+                self.jsonObserve(self.HTTPS_URL_JSON);
+            });
+    }
+    
     
     override func viewDidLoad() {
         super.viewDidLoad();
 
-        getJSONFile(HTTPS_URL_JSON);
+        jsonObserve(self.HTTPS_URL_JSON);
     }
     
 }
@@ -106,7 +90,7 @@ extension ViewController: UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SOCIALS_ELEMENT_CELL_ID)
-                    as! SocialUITableViewCell;
+            as! SocialUITableViewCell;
         
         let socialInfo = items[indexPath.row];
         
