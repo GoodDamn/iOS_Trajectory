@@ -21,6 +21,7 @@
 		2B019B1129A0F28300226B60 /* ServicesArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B019B1029A0F28300226B60 /* ServicesArray.swift */; };
 		2B019B1429A0F58200226B60 /* FullInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B019B1329A0F58200226B60 /* FullInfoViewController.swift */; };
 		2B019B1629A0F90400226B60 /* ServiceInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B019B1529A0F90400226B60 /* ServiceInfo.swift */; };
+		2B019B1E29A1CC4F00226B60 /* Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B019B1D29A1CC4F00226B60 /* Utilities.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -61,6 +62,7 @@
 		2B019B1029A0F28300226B60 /* ServicesArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServicesArray.swift; sourceTree = "<group>"; };
 		2B019B1329A0F58200226B60 /* FullInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullInfoViewController.swift; sourceTree = "<group>"; };
 		2B019B1529A0F90400226B60 /* ServiceInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceInfo.swift; sourceTree = "<group>"; };
+		2B019B1D29A1CC4F00226B60 /* Utilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Utilities.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -189,9 +191,18 @@
 		2B019B1829A1120000226B60 /* utilities */ = {
 			isa = PBXGroup;
 			children = (
+				2B019B1C29A1CC3C00226B60 /* app */,
 				2B019B0A29A0ED2700226B60 /* network */,
 			);
 			path = utilities;
+			sourceTree = "<group>";
+		};
+		2B019B1C29A1CC3C00226B60 /* app */ = {
+			isa = PBXGroup;
+			children = (
+				2B019B1D29A1CC4F00226B60 /* Utilities.swift */,
+			);
+			path = app;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -332,6 +343,7 @@
 				2B019B0629A0E35300226B60 /* SocialUITableViewCell.swift in Sources */,
 				2B019B1129A0F28300226B60 /* ServicesArray.swift in Sources */,
 				2B019AD729A0DF3100226B60 /* SceneDelegate.swift in Sources */,
+				2B019B1E29A1CC4F00226B60 /* Utilities.swift in Sources */,
 				2B019B0F29A0EF4700226B60 /* Services.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

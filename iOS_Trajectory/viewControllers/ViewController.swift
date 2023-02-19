@@ -13,7 +13,7 @@ class ViewController: UIViewController {
     
     private final let SOCIALS_ELEMENT_CELL_ID = "socials_element";
     private final let TAG = "ViewController:";
-    private final let HTTP_URL_JSON = "https://mobile-olympiad-trajectory.hb.bizmrg.com/semi-final-data.json";
+    private final let HTTPS_URL_JSON = "https://mobile-olympiad-trajectory.hb.bizmrg.com/semi-final-data.json";
     private final let VIEW_CONTROLLER_FULL_INFO_ID = "full_Info";
     
     private var items:[Services]!;
@@ -25,26 +25,50 @@ class ViewController: UIViewController {
         self.socials_tableView.reloadData();
     }
     
+    private func getJSONFile(_ url: String) {
+        NetworkUtilities.downloadFile(
+            url,
+            completion: { [weak self]
+                data in
+                
+                guard let self = self else{
+                    print(self?.TAG, "May be it was deallocated ?");
+                    return;
+                }
+                
+                do {
+                    try self.fetchData(data: data);
+                } catch {
+                    
+                    Utilities.showErrorAlertDialog(
+                        self,
+                        message: "При обработке данных, произошла ошибка",
+                        okAction: nil,
+                        retryAction: {
+                            alertAction in
+                            self.getJSONFile(self.HTTPS_URL_JSON);
+                        });
+                    
+                    print(self.TAG, "Error: JSON-parsing failed! Message:",error);
+                }
+            }, onFailed: {
+                error in
+                
+                Utilities.showErrorAlertDialog(
+                    self,
+                    message: "При получении данных из сети, произошла ошибка",
+                    okAction: nil,
+                    retryAction: {
+                        alertAction in
+                        self.getJSONFile(self.HTTPS_URL_JSON);
+                    });
+            });
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad();
-        
-        NetworkUtilities.downloadFile(HTTP_URL_JSON, completion: { [weak self]
-            data in
-            
-            guard let self = self else{
-                print(self?.TAG, "May be it was deallocated ?");
-                return;
-            }
-            
-            do {
-                try self.fetchData(data: data);
-            } catch {
-                
-                
-                print(self.TAG, "Error: JSON-parsing failed! Message:",error);
-            }
-            
-        });
+
+        getJSONFile(HTTPS_URL_JSON);
     }
     
 }
