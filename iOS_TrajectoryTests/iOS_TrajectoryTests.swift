@@ -6,28 +6,20 @@
 //
 
 import XCTest
+import UIKit;
 @testable import iOS_Trajectory
 
 class iOS_TrajectoryTests: XCTestCase {
 
-    override func setUpWithError() throws {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    let idCell = "service_element";
+    
+    func test_StoryboardFullInformation() {
+        let fullInfo = Utilities.getFullInfoViewController();
+        
+        XCTAssertNotNil(fullInfo);
     }
-
-    override func tearDownWithError() throws {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
+    
+    func test_ServiceUITableViewCell_id() {
+        XCTAssertEqual(Utilities.ID_SERVICES_ELEMENT_CELL, idCell);
     }
-
-    func testExample() throws {
-        // This is an example of a functional test case.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-
-    func testPerformanceExample() throws {
-        // This is an example of a performance test case.
-        self.measure {
-            // Put the code you want to measure the time of here.
-        }
-    }
-
 }

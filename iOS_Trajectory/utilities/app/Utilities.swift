@@ -7,7 +7,11 @@
 
 import UIKit;
 
-class Utilities{
+class Utilities {
+    
+    public static let ID_SERVICES_ELEMENT_CELL = "service_element";
+    public static let ID_MAIN_STORYBOARD = "Main";
+    public static let ID_VIEW_CONTROLLER_FULL_INFO = "full_Info";
     
     public static func showErrorAlertDialog(
         _ vc: UIViewController,
@@ -33,6 +37,16 @@ class Utilities{
         alertController.addAction(actionRetry)
         
         vc.present(alertController, animated: true, completion: nil);
+    }
+    
+    public static func getFullInfoViewController()
+            -> FullInfoViewController? {
+        
+        let storyboard = UIStoryboard(name: ID_MAIN_STORYBOARD, bundle: nil);
+        
+        return storyboard.instantiateViewController(withIdentifier: ID_VIEW_CONTROLLER_FULL_INFO)
+                as? FullInfoViewController;
+        
     }
     
 }

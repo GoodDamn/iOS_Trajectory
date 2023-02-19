@@ -11,10 +11,8 @@ class ViewController: UIViewController {
 
     @IBOutlet weak var socials_tableView:UITableView!;
     
-    private final let SOCIALS_ELEMENT_CELL_ID = "socials_element";
     private final let TAG = "ViewController:";
     private final let HTTPS_URL_JSON = "https://mobile-olympiad-trajectory.hb.bizmrg.com/semi-final-data.json";
-    private final let VIEW_CONTROLLER_FULL_INFO_ID = "full_Info";
     
     private var items:[Services]!;
     
@@ -62,10 +60,9 @@ extension ViewController: UITableViewDelegate{
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         print(TAG, "Move to Full information view controller");
         
-        let cell = tableView.cellForRow(at: indexPath) as! SocialUITableViewCell;
+        let cell = tableView.cellForRow(at: indexPath) as! ServiceUITableViewCell;
         
-        let viewController = UIStoryboard(name: "Main", bundle: nil)
-            .instantiateViewController(withIdentifier: VIEW_CONTROLLER_FULL_INFO_ID) as! FullInfoViewController;
+        let viewController = Utilities.getFullInfoViewController()!;
         
         let data = items[indexPath.row];
         
@@ -89,8 +86,8 @@ extension ViewController: UITableViewDataSource{
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: SOCIALS_ELEMENT_CELL_ID)
-            as! SocialUITableViewCell;
+        let cell = tableView.dequeueReusableCell(withIdentifier: Utilities.ID_SERVICES_ELEMENT_CELL)
+            as! ServiceUITableViewCell;
         
         let socialInfo = items[indexPath.row];
         
