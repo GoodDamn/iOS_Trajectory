@@ -24,11 +24,11 @@ class ViewController: UIViewController {
     }
     
     private func jsonObserve(_ url:String){
-        NetworkUtilities.getJSONFile(
+        NetworkUtilities.downloadJSONFile(
             url,
             completion: {
-                (servicesArray: ServicesArray) in
-                self.fetchData(servicesArray);
+                (servicesArray: ServicesArray?) in
+                self.fetchData(servicesArray!);
             }, onFailed: {
                 message in
                 self.errorAlert(message);
@@ -89,14 +89,24 @@ extension ViewController: UITableViewDataSource{
         let cell = tableView.dequeueReusableCell(withIdentifier: Utilities.ID_SERVICES_ELEMENT_CELL)
             as! ServiceUITableViewCell;
         
-        let socialInfo = items[indexPath.row];
+        let serviceInfo = items[indexPath.row];
         
-        cell.label_name.text = socialInfo.name;
+        cell.label_name.text = serviceInfo.name;
         
-        NetworkUtilities.downloadFile(socialInfo.icon_url, completion: {
-            data in
-            cell.imageView_icon.image = UIImage(data: data);
-        });
+        NetworkUtilities.downloadImage(
+            serviceInfo.icon_url,
+            completion: {
+                image in
+                cell.imageView_icon.image = image;
+            },
+            onFailed: {
+                errorMessage in
+                Utilities.showErrorAlertDialog(
+                    self,
+                    message: "При получении изображения, произошла ошибка",
+                    okAction: nil,
+                    retryAction: nil);
+            });
         
         return cell;
     }

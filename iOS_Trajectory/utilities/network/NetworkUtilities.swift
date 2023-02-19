@@ -9,13 +9,14 @@ import UIKit;
 
 class NetworkUtilities{
     
+    
     private static let TAG = "NetworkUtilities:";
     
     public static func downloadFile(
         _ httpUrl:String,
         completion: @escaping ((Data)->Void),
         onFailed: ((Error?) -> Void)?
-        ) {
+    ) {
         
         guard let url = URL(string: httpUrl) else {
             onFailed?(nil);
@@ -47,20 +48,22 @@ class NetworkUtilities{
         
     }
     
+    
     public static func downloadFile(
         _ httpUrl:String,
         completion: @escaping ((Data)->Void)
-        ) {
+    ) {
         downloadFile(httpUrl,
                      completion: completion,
                      onFailed: nil);
     }
     
-    public static func getJSONFile<T : Decodable>(
+    
+    public static func downloadJSONFile<T : Decodable>(
         _ url: String,
-        completion: @escaping ((T)->Void),
+        completion: @escaping ((T?)->Void),
         onFailed: @escaping ((String)->Void)
-        ) {
+    ) {
         
         downloadFile(
             url,
@@ -81,5 +84,31 @@ class NetworkUtilities{
                 onFailed("При получении данных из сети, произошла ошибка");
             }
         );
+    }
+    
+    
+    public static func downloadImage(
+        _ url: String,
+        completion: @escaping ((UIImage?)->Void),
+        onFailed: @escaping ((String)->Void)
+    ) {
+        
+        downloadFile(
+            url,
+            completion: {
+                data in
+                
+                guard let image = UIImage(data: data) else {
+                    onFailed("При обработке данных для изображения, произошла ошибка");
+                    return;
+                }
+                
+                completion(image);
+            },
+            onFailed: {
+                error in
+                onFailed("При получении данных для изображения, произошла ошибка");
+            });
+        
     }
 }

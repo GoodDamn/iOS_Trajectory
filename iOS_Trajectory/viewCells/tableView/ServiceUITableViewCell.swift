@@ -10,5 +10,4 @@ import UIKit;
 class ServiceUITableViewCell: UITableViewCell{
     @IBOutlet weak var label_name: UILabel!;
     @IBOutlet weak var imageView_icon: UIImageView!;
-    
 }

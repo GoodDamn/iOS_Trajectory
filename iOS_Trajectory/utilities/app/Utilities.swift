@@ -39,8 +39,7 @@ class Utilities {
         vc.present(alertController, animated: true, completion: nil);
     }
     
-    public static func getFullInfoViewController()
-            -> FullInfoViewController? {
+    public static func getFullInfoViewController() -> FullInfoViewController? {
         
         let storyboard = UIStoryboard(name: ID_MAIN_STORYBOARD, bundle: nil);
         
